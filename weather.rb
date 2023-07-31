@@ -13,10 +13,27 @@ require "json"
 
 parsed_response = JSON.parse(raw_response)
 
-#pp "Weather in your location #{user_location}"
 results = parsed_response.fetch("results")
-#pp results
 first_result = results.at(0)
 geometry= first_result.fetch("geometry")
-pp geometry
-#pp "Your latitude is #{fetch.} and longitude"
+latitude = geometry.fetch("location").fetch("lat")
+longitude = geometry.fetch("location").fetch("lng")
+
+pp "Your latitude is #{latitude} and longitude #{longitude}"
+
+
+pirate_key = ENV.fetch("PIRATE_WEATHER_KEY")
+pirate_url = "https://api.pirateweather.net/forecast/#{pirate_key}/#{latitude},#{longitude}"
+
+pirate_response = HTTP.get(pirate_url)
+
+response = JSON.parse(pirate_response)
+
+currently = response.fetch("currently")
+#pp currently
+temperature = currently.fetch("temperature")
+summary = currently.fetch("summary")
+pp "Temperature in #{user_location} is #{temperature} and it is #{summary}"
+
+probability = currently.fetch("precipProbability")
+pp probability
